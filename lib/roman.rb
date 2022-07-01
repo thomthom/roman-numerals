@@ -197,10 +197,37 @@ class RomanNumeral < Numeric
     sum + buffer_sum
   end
 
-  NumeralSet = Struct.new(:next, :half, :this)
+  # Defines the relationship of Roman numeral tokens when converted from decimals.
+  #
+  # @!attribute [r] next
+  #   @return [String, nil] The token for the next decimal place. For example:
+  #     If the current token is `X` (`10`), then the next decimal token is `C` (`100`).
+  #
+  # @!attribute half
+  #   @return [String, nil] The token for the numeral halfway to the next decimal place. For example:
+  #     If the current token is `X` (`10`), then the half decimal token is `D` (`50`).
+  #
+  # @!attribute this
+  #   @return [String, nil] The token for the current decimal place. For example:
+  #     If the value is `20` and the current decimal place is `2`, then `this`
+  #     token is `X` (`10`).
+  #
+  # @!attribute next
+  #   @return [String, nil] There is an edge-case for `4000` and `9000` where the
+  #     numeral will have to be adjusted in order to yield a consistent overline
+  #     notation. This is declared via this optional `down` property.
+  #     This is the token to substitute when `1` is subtracted from the current
+  #     decimal position. For instance: `4` (`I̅V̅`) or `9` (`I̅X̅`) at the fourth
+  #     decimal position when we switch to overline notation.
+  #
+  # @attr hello [String] Foobar
+  NumeralSet = Struct.new(:next, :half, :this, :down)
 
   NUMERAL_SETS = {
-    4 => NumeralSet.new(nil, nil, 'M'),
+    7 => NumeralSet.new(nil, nil, 'M̅'),
+    6 => NumeralSet.new('M̅', 'D̅', 'C̅'),
+    5 => NumeralSet.new('C̅', 'L̅', 'X̅'),
+    4 => NumeralSet.new('X̅', 'V̅', 'M', 'I̅'),
     3 => NumeralSet.new('M', 'D', 'C'),
     2 => NumeralSet.new('C', 'L', 'X'),
     1 => NumeralSet.new('X', 'V', 'I'),
@@ -239,7 +266,8 @@ class RomanNumeral < Numeric
       set.this * digit
     when 4
       # 4 => CD
-      "#{set.this}#{set.half}"
+      this = set.down || set.this
+      "#{this}#{set.half}"
     when 5
       # 5 => V
       set.half
@@ -251,7 +279,8 @@ class RomanNumeral < Numeric
       "#{set.half}#{set.this * count}"
     when 9
       # 9 => CM
-      "#{set.this}#{set.next}"
+      this = set.down || set.this
+      "#{this}#{set.next}"
     else
       # 0 -> ''
       ''
@@ -308,7 +337,7 @@ class RomanNumeral < Numeric
   end
 
   # @param [Integer] input
-  # @raises [RangeError] when the input is outside the range of what can be converted to roman numerals.
+  # @raise [RangeError] when the input is outside the range of what can be converted to roman numerals.
   def check_range(input)
     raise RangeError, "integer out of range: #{input}" unless (0...4_000_000).include?(input)
   end

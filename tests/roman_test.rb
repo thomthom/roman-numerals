@@ -69,12 +69,12 @@ class RomanNumeralTest < Minitest::Test
   end
 
   def test_large_values_unicode_combining_overline
-    assert_to_decimal('I̅V̅DVI', 4_506)
+    assert_roundtrip('I̅V̅DVI', 4_506)
     assert_to_decimal('MV̅DVI', 4_506) # Alternative
-    assert_to_decimal('L̅X̅MMMCCCXXXIX', 63_339)
-    assert_to_decimal('C̅C̅X̅C̅I̅X̅DLV', 299_555)
+    assert_roundtrip('L̅X̅MMMCCCXXXIX', 63_339)
+    assert_roundtrip('C̅C̅X̅C̅I̅X̅DLV', 299_555)
     assert_to_decimal('C̅C̅X̅C̅MX̅DLV', 299_555) # Alternative
-    assert_to_decimal('M̅M̅D̅C̅L̅X̅V̅II', 2_665_002)
+    assert_roundtrip('M̅M̅D̅C̅L̅X̅V̅II', 2_665_002)
   end
 
   def test_large_values_ascii_notation
