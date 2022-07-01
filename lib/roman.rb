@@ -2,22 +2,30 @@
 
 class RomanNumeral < Numeric
 
-  attr_reader :decimal, :roman
+  # @return [Integer]
+  attr_reader :decimal
 
   # @param [Integer, String] input
   def initialize(input)
     super()
     case input
     when Integer
+      check_range(input)
       @decimal = input
-      @roman = generate_roman(input)
+      @roman = nil # Lazy-generated. (See #roman)
     when String
       adjusted = input.upcase
-      @decimal = parse_roman(adjusted).freeze
-      @roman = adjusted
+      @decimal = parse_roman(adjusted)
+      @roman = adjusted.freeze
     else
       raise TypeError, "expected Integer or String, got #{input.class}"
     end
+  end
+
+  # @return [String]
+  def roman
+    @roman ||= generate_roman(@decimal).freeze
+    @roman
   end
 
   # @param [RomanNumeral, Integer] other
@@ -57,7 +65,7 @@ class RomanNumeral < Numeric
 
   # @return [Integer]
   def to_i
-    @decimal
+    decimal
   end
   alias to_int to_i
 
@@ -79,7 +87,7 @@ class RomanNumeral < Numeric
 
   # @return [String]
   def to_s
-    @roman
+    roman
   end
 
   private
@@ -224,7 +232,7 @@ class RomanNumeral < Numeric
     # C\u0305 => C̅
     #
     # https://stackoverflow.com/questions/41664207/adding-the-combining-overline-unicode-character
-    raise RangeError, "integer too large: #{input}" unless (0...4000).include?(input)
+    check_range(input)
 
     # It's less clear how zero was represented. Some indication that `nulla`, others `N`.
     # https://en.wikipedia.org/wiki/Roman_numerals#Zero
@@ -238,6 +246,12 @@ class RomanNumeral < Numeric
       output << digit_to_roman(position, token.to_i)
     }
     output
+  end
+
+  # @param [Integer] input
+  # @raises [RangeError] when the input is outside the range of what can be converted to roman numerals.
+  def check_range(input)
+    raise RangeError, "integer too large: #{input}" unless (0...4000).include?(input)
   end
 
 end
