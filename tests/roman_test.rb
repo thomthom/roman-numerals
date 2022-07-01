@@ -179,4 +179,22 @@ class RomanNumeralTest < Minitest::Test
     assert_equal(-1, 200 <=> numeral)
   end
 
+  def test_to_s
+    result = RomanNumeral.new(1983).to_s
+    assert_kind_of(String, result)
+    assert_equal('MCMLXXXIII', result)
+  end
+
+  def test_to_i
+    result = RomanNumeral.new(1983).to_i
+    assert_kind_of(Integer, result)
+    assert_equal(1983, result)
+  end
+
+  def test_to_int
+    result = RomanNumeral.new(1983).to_int
+    assert_kind_of(Integer, result)
+    assert_equal(1983, result)
+  end
+
 end
