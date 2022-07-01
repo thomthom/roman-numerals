@@ -106,6 +106,9 @@ class RomanNumeral < Numeric
     end
   end
 
+  MEGA_MODIFIER = '_'
+  MODIFIABLE_TOKENS = 'MDCLXVI'
+
   COMBINING_OVERLINE = "\u0305"
 
   ROMAN_TOKENS = {
@@ -135,13 +138,37 @@ class RomanNumeral < Numeric
     sum = 0
     previous_value = 0
     buffer_sum = 0
+    mega = false
     input.each_char.with_index { |token, i|
+      # Account for ASCII modifier to the numerals.
+      if mega && !MODIFIABLE_TOKENS.include?(token)
+        raise ArgumentError, "unexpected token after MEGA_MODIFIER: #{token}"
+      end
+
+      if token == MEGA_MODIFIER
+        mega = true
+        next
+      end
+
       # Account for possible Combining Overline diacritics.
       # https://en.wikipedia.org/wiki/Combining_character
       next if token == COMBINING_OVERLINE
 
       # Look ahead to see if there's an overline, indicating multiplication by 1000.
-      token = input[i, 2] if input[i + 1] == COMBINING_OVERLINE
+      # token = input[i, 2] if input[i + 1] == COMBINING_OVERLINE
+      if input[i + 1] == COMBINING_OVERLINE
+        token = input[i, 2]
+        # Can't combine ASCII notation and Unicode tokens.
+        raise ArgumentError, "unexpected token after MEGA_MODIFIER: #{token}" if mega
+      end
+
+      # Convert the ASCII notation to Unicode notation.
+      if mega
+        token = "#{token}#{COMBINING_OVERLINE}"
+      end
+
+      # Reset the MEGA state now that we have the full token.
+      mega = false
 
       raise ArgumentError, "invalid numeral: #{token}" unless ROMAN_TOKENS.include?(token)
 

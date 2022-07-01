@@ -77,6 +77,21 @@ class RomanNumeralTest < Minitest::Test
     assert_to_decimal('M̅M̅D̅C̅L̅X̅V̅II', 2_665_002)
   end
 
+  def test_large_values_ascii_notation
+    assert_to_decimal('_I_VDVI', 4_506)
+    assert_to_decimal('M_VDVI', 4_506) # Alternative
+    assert_to_decimal('_L_XMMMCCCXXXIX', 63_339)
+    assert_to_decimal('_C_C_X_C_I_XDLV', 299_555)
+    assert_to_decimal('_C_C_X_CM_XDLV', 299_555) # Alternative
+    assert_to_decimal('_M_M_D_C_L_X_VII', 2_665_002)
+  end
+
+  def test_large_values_ascii_notation_invalid_tokens
+    assert_raises(ArgumentError) do
+      RomanNumeral.new('_C̅')
+    end
+  end
+
   def test_zero
     assert_to_roman(0, 'N')
   end
