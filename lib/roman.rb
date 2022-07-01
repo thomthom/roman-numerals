@@ -221,17 +221,22 @@ class RomanNumeral < Numeric
     #   Use a leading underline character to input Roman numerals with an overline. A line over a
     #   Roman numeral means it is multiplied by 1,000.
     #
-    # _M = 1 000 000
-    # _D =   500 000
-    # _C =   100 000
-    # _L =    50 000
-    # _X =    10 000
-    # _V =     5 000
-    # _I =     1 000
+    # _M = 1 000 000 - M̅
+    # _D =   500 000 - D̅
+    # _C =   100 000 - C̅
+    # _L =    50 000 - L̅
+    # _X =    10 000 - X̅
+    # _V =     5 000 - V̅
+    # _I =     1 000 - I̅
     #
     # Combining Overline Unicode Character:
     # M\u0305 => M̅
+    # D\u0305 => D̅
     # C\u0305 => C̅
+    # L\u0305 => L̅
+    # X\u0305 => X̅
+    # V\u0305 => V̅
+    # I\u0305 => I̅
     #
     # https://stackoverflow.com/questions/41664207/adding-the-combining-overline-unicode-character
     check_range(input)
