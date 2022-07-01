@@ -1,14 +1,17 @@
+# frozen_string_literal: true
+
 class RomanNumeral < Numeric
 
-  attr_reader :decimal
-  attr_reader :roman
+  attr_reader :decimal, :roman
 
   # @param [Integer, String] input
   def initialize(input)
-    if input.is_a?(Integer)
+    super()
+    case input
+    when Integer
       @decimal = input
       @roman = generate_roman(input)
-    elsif input.is_a?(String)
+    when String
       adjusted = input.upcase
       @decimal = parse_roman(adjusted).freeze
       @roman = adjusted
@@ -49,8 +52,6 @@ class RomanNumeral < Numeric
       to_i <=> other.to_i
     when Integer
       to_i <=> other
-    else
-      nil
     end
   end
 
@@ -68,7 +69,7 @@ class RomanNumeral < Numeric
     # https://ruby-doc.org/core-2.7.2/Numeric.html
     case other
     when Integer
-      # Note: The docs indicate that this should be [self.class.new(other), self],
+      # NOTE: The docs indicate that this should be [self.class.new(other), self],
       # but that would mean Integer + RomanNumeral returns RomanNumeral.
       # This seems wrong (?). Seems that Integer + RomanNumeral should return Integer.
       # And RomanNumeral + Integer should return RomanNumeral.
@@ -170,24 +171,25 @@ class RomanNumeral < Numeric
     #  9 => CM
 
     # Examples in position 3 (centi)
-    if (1..3).include?(digit)
+    case digit
+    when 1..3
       # 1 => C
       # 2 => CC
       # 3 => CCC
       set.this * digit
-    elsif digit == 4
+    when 4
       # 4 => CD
       "#{set.this}#{set.half}"
-    elsif digit == 5
+    when 5
       # 5 => V
       set.half
-    elsif (6..8).include?(digit)
+    when 6..8
       # 6 => DC
       # 7 => DCC
       # 8 => DCCC
       count = digit - 5
-      "#{set.half}#{(set.this * count) }"
-    elsif digit == 9
+      "#{set.half}#{set.this * count}"
+    when 9
       # 9 => CM
       "#{set.this}#{set.next}"
     else
@@ -224,9 +226,9 @@ class RomanNumeral < Numeric
     # C\u0305 => C̅
     #
     # https://stackoverflow.com/questions/41664207/adding-the-combining-overline-unicode-character
-    raise RangeError, "integer too large" if input >= 4000 # TODO: Figure out how to represent larger numbers
+    raise RangeError, 'integer too large' if input >= 4000 # TODO: Figure out how to represent larger numbers
 
-    output = ''
+    output = +''
     string = input.to_s
     string.each_char.with_index { |token, i|
       # Position from the right. (Base 1)

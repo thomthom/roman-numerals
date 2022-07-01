@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Roman Numerals to Decimals
 #
 # ruby roman.rb MCMLXXXIII
@@ -10,7 +12,7 @@
 
 require_relative 'lib/roman'
 
-if $0 == File.basename(__FILE__)
+if $PROGRAM_NAME == File.basename(__FILE__)
   input = ARGV[0]
   integer_pattern = /\A\s*\d+\s*\z/
   input = input.to_i if integer_pattern.match?(input)

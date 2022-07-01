@@ -65,7 +65,7 @@ class RomanNumeralTest < Minitest::Test
     assert_kind_of(RomanNumeral, result)
     assert_equal(2003, result)
 
-    result =  RomanNumeral.new(1983) + RomanNumeral.new(20)
+    result = RomanNumeral.new(1983) + RomanNumeral.new(20)
     assert_kind_of(RomanNumeral, result)
     assert_equal(2003, result.to_i)
 
@@ -91,7 +91,7 @@ class RomanNumeralTest < Minitest::Test
     assert_kind_of(Integer, result)
     assert_equal(2003, result)
 
-    result =  RomanNumeral.new(1983) + 20
+    result = RomanNumeral.new(1983) + 20
     assert_kind_of(RomanNumeral, result)
     assert_equal(2003, result.to_i)
 
