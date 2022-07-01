@@ -23,6 +23,9 @@ Metrics/MethodLength:
   Exclude:
   - tests/**/*
 
+Minitest/MultipleAssertions:
+  Enabled: false
+
 Style/MultilineIfModifier:
   Exclude:
   - Gemfile
@@ -170,8 +173,6 @@ Minitest/AssertionInLifecycleHook: # new in 0.10
 Minitest/DuplicateTestRun: # new in 0.19
   Enabled: true
 Minitest/LiteralAsActualArgument: # new in 0.10
-  Enabled: true
-Minitest/MultipleAssertions: # new in 0.10
   Enabled: true
 Minitest/RefuteInDelta: # new in 0.10
   Enabled: true
