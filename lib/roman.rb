@@ -131,13 +131,11 @@ class RomanNumeral < Numeric
   private_constant :ROMAN_TOKENS
 
   # @param [String] input
-  # @return [Integer]
-  def parse_roman(input)
+  # @return [Array<String>]
+  def parse_roman_tokens(input)
     raise ArgumentError, 'invalid numeral: empty string' if input.empty?
 
-    sum = 0
-    previous_value = 0
-    buffer_sum = 0
+    tokens = []
     mega = false
     input.each_char.with_index { |token, i|
       # Account for ASCII modifier to the numerals.
@@ -155,7 +153,6 @@ class RomanNumeral < Numeric
       next if token == COMBINING_OVERLINE
 
       # Look ahead to see if there's an overline, indicating multiplication by 1000.
-      # token = input[i, 2] if input[i + 1] == COMBINING_OVERLINE
       if input[i + 1] == COMBINING_OVERLINE
         token = input[i, 2]
         # Can't combine ASCII notation and Unicode tokens.
@@ -163,15 +160,24 @@ class RomanNumeral < Numeric
       end
 
       # Convert the ASCII notation to Unicode notation.
-      if mega
-        token = "#{token}#{COMBINING_OVERLINE}"
-      end
+      token = "#{token}#{COMBINING_OVERLINE}" if mega
+      raise ArgumentError, "invalid numeral: #{token}" unless ROMAN_TOKENS.include?(token)
 
       # Reset the MEGA state now that we have the full token.
       mega = false
 
-      raise ArgumentError, "invalid numeral: #{token}" unless ROMAN_TOKENS.include?(token)
+      tokens << token
+    }
+    tokens
+  end
 
+  # @param [String] input
+  # @return [Integer]
+  def parse_roman(input)
+    sum = 0
+    previous_value = 0
+    buffer_sum = 0
+    parse_roman_tokens(input).each { |token|
       # Read the characters in chunks. Each chunk consists of the same token.
       # Add up the sum for the chunk and compare against the previous token
       # chunk whether to add or subtract to the total sum.
