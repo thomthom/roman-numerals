@@ -13,7 +13,7 @@ module RomanNumeralTests
   # @param [Object] from
   # @param [Object] expected
   # @param [Object] actual
-  def assert_convert(from, expected, actual)
+  def assert_conversion(from, expected, actual)
     if expected == actual
       print '.'
     else
@@ -24,36 +24,57 @@ module RomanNumeralTests
 
   # @param [String] roman
   # @param [Integer] decimal
-  def assert_roman(roman, decimal)
-    numeral = RomanNumeral.new(decimal)
-    assert_convert(decimal, roman, numeral.roman)
-
+  def assert_to_decimal(roman, decimal)
     numeral = RomanNumeral.new(roman)
-    assert_convert(roman, decimal, numeral.decimal)
+    assert_conversion(roman, decimal, numeral.decimal)
   end
 
-  def run
-    # https://en.wikipedia.org/wiki/Roman_numerals#Standard_form
-    assert_roman('XXXIX', 39)
-    assert_roman('CCXLVI', 246)
-    assert_roman('DCCLXXXIX', 789)
-    assert_roman('MMCDXXI', 2421)
+  # @param [Integer] decimal
+  # @param [String] roman
+  def assert_to_roman(decimal, roman)
+    numeral = RomanNumeral.new(decimal)
+    assert_conversion(decimal, roman, numeral.roman)
+  end
 
-    assert_roman('CLX', 160)
-    assert_roman('CCVII', 207)
-    assert_roman('MIX', 1009)
-    assert_roman('MLXVI', 1066)
+  # @param [String] roman
+  # @param [Integer] decimal
+  def assert_roundtrip(roman, decimal)
+    assert_to_decimal(roman, decimal)
+    assert_to_roman(decimal, roman)
+  end
 
-    assert_roman('MDCCLXXVI', 1776)
-    assert_roman('MCMXVIII', 1918)
-    assert_roman('MCMLIV', 1954)
-    assert_roman('MMXIV', 2014)
-
+  def report_summary
     puts
     failures.each { |failure|
       puts failure
     }
     puts 'All tests passed!' if failures.empty?
+  end
+
+  def run
+    # https://en.wikipedia.org/wiki/Roman_numerals#Standard_form
+    assert_roundtrip('XXXIX', 39)
+    assert_roundtrip('CCXLVI', 246)
+    assert_roundtrip('DCCLXXXIX', 789)
+    assert_roundtrip('MMCDXXI', 2421)
+
+    assert_roundtrip('CLX', 160)
+    assert_roundtrip('CCVII', 207)
+    assert_roundtrip('MIX', 1009)
+    assert_roundtrip('MLXVI', 1066)
+
+    assert_roundtrip('MDCCLXXVI', 1776)
+    assert_roundtrip('MCMXVIII', 1918)
+    assert_roundtrip('MCMLIV', 1954)
+    assert_roundtrip('MMXIV', 2014)
+
+    # Non-standard variants
+    assert_to_decimal('MCMLXXXIII', 1983) # Standard (baseline)
+    assert_to_decimal('MCMXXCIII', 1983)
+    assert_to_decimal('MCMLXXXIII', 1983)
+    assert_to_decimal('MCMXXCIIV', 1983)
+
+    report_summary
   end
 
 end

@@ -1,9 +1,5 @@
 # Roman Numerals to Decimals
 #
-# ruby roman.rb MCMXXCIII => 1983
-# ruby roman.rb MCMLXXXIII => 1983
-# ruby roman.rb MCMXXCIIV => 1983
-#
 # ruby roman.rb MCMLXXXIII
 # => 1983
 #
