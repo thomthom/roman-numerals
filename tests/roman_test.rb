@@ -1,38 +1,11 @@
-require_relative 'roman'
+# frozen_string_literal: true
 
-module RomanNumeralTests
+require 'minitest/autorun'
+require 'test_helper'
 
-  extend self
+require 'roman'
 
-  # @return [Array]
-  def failures
-    @failures ||= []
-    @failures
-  end
-
-  # @param [Object] expression
-  # @param [String] message
-  def assert(expression, message = nil)
-    if expression
-      print '.'
-    else
-      print 'F'
-      failures << (message || "Expression failed: #{expression}")
-    end
-  end
-
-  # @param [Object] expected
-  # @param [Object] actual
-  def assert_equal(expected, actual, message = nil)
-    assert(expected == actual, message || "Expected: #{expected.inspect} Actual: #{actual.inspect}")
-  end
-
-  # @param [Class] expected
-  # @param [Object] actual
-  def assert_kind_of(expected, actual, message = nil)
-    raise unless expected.is_a?(Class)
-    assert(actual.is_a?(expected), message || "Expected: #{expected.inspect} Actual: #{actual.class.inspect} (#{actual.inspect})")
-  end
+class RomanNumeralTest < Minitest::Test
 
   # @param [Object] from
   # @param [Object] expected
@@ -63,15 +36,8 @@ module RomanNumeralTests
     assert_to_roman(decimal, roman)
   end
 
-  def report_summary
-    puts
-    failures.each { |failure|
-      puts failure
-    }
-    puts 'All tests passed!' if failures.empty?
-  end
 
-  def run
+  def test_all
     # https://en.wikipedia.org/wiki/Roman_numerals#Standard_form
     assert_roundtrip('XXXIX', 39)
     assert_roundtrip('CCXLVI', 246)
@@ -148,10 +114,6 @@ module RomanNumeralTests
     assert_equal(-1, 500 <=> numeral)
     assert_equal(0, 486 <=> numeral)
     assert_equal(1, 200 <=> numeral)
-
-    report_summary
   end
 
 end
-
-RomanNumeralTests.run

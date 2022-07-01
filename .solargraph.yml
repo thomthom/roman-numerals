@@ -1,0 +1,6 @@
+require_paths:
+- lib
+- tests/helpers
+
+reporters:
+- rubocop

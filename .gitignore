@@ -1,0 +1,12 @@
+# RuboCop
+.rubocop-https-*-yml
+
+# YARD
+/.yardoc
+/doc
+
+# SimpleCov
+/coverage
+
+# Bundler
+Gemfile.lock
