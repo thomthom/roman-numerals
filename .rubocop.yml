@@ -20,6 +20,7 @@ Metrics/ClassLength:
   - tests/**/*
 
 Metrics/MethodLength:
+  Max: 30
   Exclude:
   - tests/**/*
 

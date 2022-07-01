@@ -106,8 +106,17 @@ class RomanNumeral < Numeric
     end
   end
 
+  COMBINING_OVERLINE = "\u0305"
+
   ROMAN_TOKENS = {
-    'M' => 1000,
+    'M̅' => 1_000_000,
+    'D̅' => 500_000,
+    'C̅' => 100_000,
+    'L̅' => 50_000,
+    'X̅' => 10_000,
+    'V̅' => 5_000,
+    'I̅' => 1_000,
+    'M' => 1_000,
     'D' => 500,
     'C' => 100,
     'L' => 50,
@@ -126,9 +135,19 @@ class RomanNumeral < Numeric
     sum = 0
     previous_value = 0
     buffer_sum = 0
-    input.each_char { |token|
+    input.each_char.with_index { |token, i|
+      # Account for possible Combining Overline diacritics.
+      # https://en.wikipedia.org/wiki/Combining_character
+      next if token == COMBINING_OVERLINE
+
+      # Look ahead to see if there's an overline, indicating multiplication by 1000.
+      token = input[i, 2] if input[i + 1] == COMBINING_OVERLINE
+
       raise ArgumentError, "invalid numeral: #{token}" unless ROMAN_TOKENS.include?(token)
 
+      # Read the characters in chunks. Each chunk consists of the same token.
+      # Add up the sum for the chunk and compare against the previous token
+      # chunk whether to add or subtract to the total sum.
       value = ROMAN_TOKENS[token]
       if value == previous_value
         buffer_sum += value
@@ -258,7 +277,7 @@ class RomanNumeral < Numeric
   # @param [Integer] input
   # @raises [RangeError] when the input is outside the range of what can be converted to roman numerals.
   def check_range(input)
-    raise RangeError, "integer out of range: #{input}" unless (0...4000).include?(input)
+    raise RangeError, "integer out of range: #{input}" unless (0...4_000_000).include?(input)
   end
 
 end
