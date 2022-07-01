@@ -37,7 +37,13 @@ class RomanNumeralTest < Minitest::Test
   end
 
 
-  def test_all
+  def test_class
+    numeral = RomanNumeral.new(101)
+    assert_kind_of(Numeric, numeral)
+    assert_kind_of(Comparable, numeral)
+  end
+
+  def test_standard_forms
     # https://en.wikipedia.org/wiki/Roman_numerals#Standard_form
     assert_roundtrip('XXXIX', 39)
     assert_roundtrip('CCXLVI', 246)
@@ -53,67 +59,108 @@ class RomanNumeralTest < Minitest::Test
     assert_roundtrip('MCMXVIII', 1918)
     assert_roundtrip('MCMLIV', 1954)
     assert_roundtrip('MMXIV', 2014)
+  end
 
-    # Non-standard variants
+  def test_non_standard_formats
     assert_to_decimal('MCMLXXXIII', 1983) # Standard (baseline)
     assert_to_decimal('MCMXXCIII', 1983)
     assert_to_decimal('MCMLXXXIII', 1983)
     assert_to_decimal('MCMXXCIIV', 1983)
+  end
 
-    # Arithmetic operations
+  # Arithmetic operations
+  def test_arithmetic_operation_add
     result = RomanNumeral.new(20) + RomanNumeral.new(1983)
     assert_kind_of(RomanNumeral, result)
     assert_equal(2003, result)
+  end
 
-    result = RomanNumeral.new(1983) + RomanNumeral.new(20)
-    assert_kind_of(RomanNumeral, result)
-    assert_equal(2003, result.to_i)
-
+  def test_arithmetic_operation_subtract
     result = RomanNumeral.new(1983) - RomanNumeral.new(31)
     assert_kind_of(RomanNumeral, result)
-    assert_equal(1952, result.to_i)
+    assert_equal(1952, result)
+  end
 
+  def test_arithmetic_operation_multiply
     result = RomanNumeral.new(486) * RomanNumeral.new(2)
     assert_kind_of(RomanNumeral, result)
-    assert_equal(972, result.to_i)
+    assert_equal(972, result)
+  end
 
+  def test_arithmetic_operation_divide
     result = RomanNumeral.new(486) / RomanNumeral.new(2)
     assert_kind_of(RomanNumeral, result)
-    assert_equal(243, result.to_i)
+    assert_equal(243, result)
+  end
 
+  def test_arithmetic_operation_compare
     numeral = RomanNumeral.new(486)
     assert_equal(-1, numeral <=> RomanNumeral.new(500))
     assert_equal(0, numeral <=> RomanNumeral.new(486))
     assert_equal(1, numeral <=> RomanNumeral.new(200))
+  end
 
-    # Interoperability with Integer
+  # Interoperability with Integer
+  def test_arithmetic_operation_add_to_integer
     result = 20 + RomanNumeral.new(1983)
-    assert_kind_of(Integer, result)
+    assert_kind_of(RomanNumeral, result)
     assert_equal(2003, result)
+  end
 
+  def test_arithmetic_operation_add_integer
     result = RomanNumeral.new(1983) + 20
     assert_kind_of(RomanNumeral, result)
-    assert_equal(2003, result.to_i)
+    assert_equal(2003, result)
+  end
 
+  def test_arithmetic_operation_subtract_from_integer
+    result = 1983 - RomanNumeral.new(31)
+    assert_kind_of(RomanNumeral, result)
+    assert_equal(1952, result)
+  end
+
+  def test_arithmetic_operation_subtract_integer
     result = RomanNumeral.new(1983) - 31
     assert_kind_of(RomanNumeral, result)
-    assert_equal(1952, result.to_i)
+    assert_equal(1952, result)
+  end
 
+  def test_arithmetic_operation_multiply_integer
+    result = 2 * RomanNumeral.new(486)
+    assert_kind_of(RomanNumeral, result)
+    assert_equal(972, result)
+  end
+
+  def test_arithmetic_operation_multiply_by_integer
     result = RomanNumeral.new(486) * 2
     assert_kind_of(RomanNumeral, result)
-    assert_equal(972, result.to_i)
+    assert_equal(972, result)
+  end
 
+  def test_arithmetic_operation_divide_integer
+    result = 486 / RomanNumeral.new(2)
+    assert_kind_of(RomanNumeral, result)
+    assert_equal(243, result)
+  end
+
+  def test_arithmetic_operation_divide_by_integer
     result = RomanNumeral.new(486) / 2
     assert_kind_of(RomanNumeral, result)
-    assert_equal(243, result.to_i)
+    assert_equal(243, result)
+  end
 
+  def test_comparable_with_right_hand_integer
     numeral = RomanNumeral.new(486)
     assert_equal(-1, numeral <=> 500)
     assert_equal(0, numeral <=> 486)
     assert_equal(1, numeral <=> 200)
-    assert_equal(-1, 500 <=> numeral)
+  end
+
+  def test_comparable_with_left_hand_integer
+    numeral = RomanNumeral.new(486)
+    assert_equal(1, 500 <=> numeral)
     assert_equal(0, 486 <=> numeral)
-    assert_equal(1, 200 <=> numeral)
+    assert_equal(-1, 200 <=> numeral)
   end
 
 end

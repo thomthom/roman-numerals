@@ -62,7 +62,7 @@ class RomanNumeral < Numeric
   alias to_int to_i
 
   # @param [Numeric] other
-  # @return [Array(Numeric, RomanNumeral)]
+  # @return [Array(RomanNumeral, RomanNumeral)]
   def coerce(other)
     # > Inheriting classes should also implement arithmetic operator
     # > methods (+, -, * and /) and the <=> operator (see Comparable).
@@ -70,10 +70,8 @@ class RomanNumeral < Numeric
     case other
     when Integer
       # NOTE: The docs indicate that this should be [self.class.new(other), self],
-      # but that would mean Integer + RomanNumeral returns RomanNumeral.
-      # This seems wrong (?). Seems that Integer + RomanNumeral should return Integer.
-      # And RomanNumeral + Integer should return RomanNumeral.
-      [to_i, other]
+      #       That means Integer + RomanNumeral returns RomanNumeral.
+      [self.class.new(other), self]
     else
       raise TypeError, "unable to coerce to #{other.class}"
     end
@@ -226,7 +224,7 @@ class RomanNumeral < Numeric
     # C\u0305 => C̅
     #
     # https://stackoverflow.com/questions/41664207/adding-the-combining-overline-unicode-character
-    raise RangeError, 'integer too large' if input >= 4000 # TODO: Figure out how to represent larger numbers
+    raise RangeError, "integer too large: #{input}" if input >= 4000 # TODO: Figure out how to represent larger numbers
 
     output = +''
     string = input.to_s
