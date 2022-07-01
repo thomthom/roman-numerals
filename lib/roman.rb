@@ -121,6 +121,8 @@ class RomanNumeral < Numeric
   # @param [String] input
   # @return [Integer]
   def parse_roman(input)
+    raise ArgumentError, 'invalid numeral: empty string' if input.empty?
+
     sum = 0
     previous_value = 0
     buffer_sum = 0
@@ -251,7 +253,7 @@ class RomanNumeral < Numeric
   # @param [Integer] input
   # @raises [RangeError] when the input is outside the range of what can be converted to roman numerals.
   def check_range(input)
-    raise RangeError, "integer too large: #{input}" unless (0...4000).include?(input)
+    raise RangeError, "integer out of range: #{input}" unless (0...4000).include?(input)
   end
 
 end
