@@ -1,0 +1,6 @@
+--no-private
+--markup markdown
+--markup-provider commonmarker
+lib/**/*.rb
+-
+README.md

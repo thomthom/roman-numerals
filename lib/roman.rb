@@ -1,5 +1,47 @@
 # frozen_string_literal: true
 
+# A numeric class for Roman numerals.
+#
+# @example From a decimal integer
+#   numeral = RomanNumeral.new(1983)
+#   numeral.to_s # => 'MCMLXXXIII'
+#   numeral.to_i # => 1983
+#
+# @example From a roman numeral string
+#   numeral = RomanNumeral.new('MCMLXXXIII')
+#   numeral.to_s # => 'MCMLXXXIII'
+#   numeral.to_i # => 1983
+#
+# @example Integer arithmetic operations on numerals
+#   numeral = RomanNumeral.new(1983) + 20
+#   numeral.to_s # => 'MMIII'
+#   numeral.to_i # => 2003
+#
+# @example Roman numeral arithmetic operations on integers
+#   numeral = 20 + RomanNumeral.new(1983)
+#   numeral.to_s # => 'MMIII'
+#   numeral.to_i # => 2003
+#
+# @example Zero
+#   numeral = RomanNumeral.new(0)
+#   numeral.to_s # => 'N'
+#   numeral.to_i # => 0
+#
+# @example Large values
+#   numeral = RomanNumeral.new(2_665_002)
+#   numeral.to_s # => 'M̅M̅D̅C̅L̅X̅V̅II'
+#   numeral.to_i # => 2665002
+#
+# @example Mega Unicode notation
+#   numeral = RomanNumeral.new('M̅M̅D̅C̅L̅X̅V̅II')
+#   numeral.to_s # => 'M̅M̅D̅C̅L̅X̅V̅II'
+#   numeral.to_i # => 2665002
+#
+# @example Mega ASCII notation
+#   # Prefix with `_` to multiply the following numeral by 1000.
+#   numeral = RomanNumeral.new('_M_M_D_C_L_X_VII')
+#   numeral.to_s # => 'M̅M̅D̅C̅L̅X̅V̅II'
+#   numeral.to_i # => 2665002
 class RomanNumeral < Numeric
 
   # @return [Integer]
@@ -22,7 +64,9 @@ class RomanNumeral < Numeric
     end
   end
 
-  # @return [String]
+  # @!attribute [r] roman
+  #   @return [Integer]
+  # @return [Integer]
   def roman
     @roman ||= generate_roman(@decimal).freeze
     @roman
@@ -197,22 +241,26 @@ class RomanNumeral < Numeric
     sum + buffer_sum
   end
 
+  # @!parse public
+
+  # @private
+  #
   # Defines the relationship of Roman numeral tokens when converted from decimals.
   #
   # @!attribute [r] next
   #   @return [String, nil] The token for the next decimal place. For example:
   #     If the current token is `X` (`10`), then the next decimal token is `C` (`100`).
   #
-  # @!attribute half
+  # @!attribute [r] half
   #   @return [String, nil] The token for the numeral halfway to the next decimal place. For example:
   #     If the current token is `X` (`10`), then the half decimal token is `D` (`50`).
   #
-  # @!attribute this
+  # @!attribute [r] this
   #   @return [String, nil] The token for the current decimal place. For example:
   #     If the value is `20` and the current decimal place is `2`, then `this`
   #     token is `X` (`10`).
   #
-  # @!attribute next
+  # @!attribute [r] down
   #   @return [String, nil] There is an edge-case for `4000` and `9000` where the
   #     numeral will have to be adjusted in order to yield a consistent overline
   #     notation. This is declared via this optional `down` property.
@@ -220,8 +268,9 @@ class RomanNumeral < Numeric
   #     decimal position. For instance: `4` (`I̅V̅`) or `9` (`I̅X̅`) at the fourth
   #     decimal position when we switch to overline notation.
   #
-  # @attr hello [String] Foobar
   NumeralSet = Struct.new(:next, :half, :this, :down)
+
+  # @!parse private
 
   NUMERAL_SETS = {
     7 => NumeralSet.new(nil, nil, 'M̅'),
