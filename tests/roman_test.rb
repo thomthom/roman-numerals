@@ -68,6 +68,22 @@ class RomanNumeralTest < Minitest::Test
     assert_to_decimal('MCMXXCIIV', 1983)
   end
 
+  def test_zero
+    assert_to_roman(0, 'N')
+  end
+
+  def test_negative_values
+    assert_raises(RangeError) do
+      RomanNumeral.new(-42)
+    end
+  end
+
+  def test_too_large_value
+    assert_raises(RangeError) do
+      RomanNumeral.new(4000)
+    end
+  end
+
   # Arithmetic operations
   def test_arithmetic_operation_add
     result = RomanNumeral.new(20) + RomanNumeral.new(1983)

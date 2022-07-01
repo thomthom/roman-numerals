@@ -224,7 +224,11 @@ class RomanNumeral < Numeric
     # C\u0305 => C̅
     #
     # https://stackoverflow.com/questions/41664207/adding-the-combining-overline-unicode-character
-    raise RangeError, "integer too large: #{input}" if input >= 4000 # TODO: Figure out how to represent larger numbers
+    raise RangeError, "integer too large: #{input}" unless (0...4000).include?(input)
+
+    # It's less clear how zero was represented. Some indication that `nulla`, others `N`.
+    # https://en.wikipedia.org/wiki/Roman_numerals#Zero
+    return +'N' if input == 0
 
     output = +''
     string = input.to_s
