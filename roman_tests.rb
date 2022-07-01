@@ -10,16 +10,36 @@ module RomanNumeralTests
     @failures
   end
 
+  # @param [Object] expression
+  # @param [String] message
+  def assert(expression, message = nil)
+    if expression
+      print '.'
+    else
+      print 'F'
+      failures << (message || "Expression failed: #{expression}")
+    end
+  end
+
+  # @param [Object] expected
+  # @param [Object] actual
+  def assert_equal(expected, actual, message = nil)
+    assert(expected == actual, message || "Expected: #{expected.inspect} Actual: #{actual.inspect}")
+  end
+
+  # @param [Class] expected
+  # @param [Object] actual
+  def assert_kind_of(expected, actual, message = nil)
+    raise unless expected.is_a?(Class)
+    assert(actual.is_a?(expected), message || "Expected: #{expected.inspect} Actual: #{actual.class.inspect} (#{actual.inspect})")
+  end
+
   # @param [Object] from
   # @param [Object] expected
   # @param [Object] actual
   def assert_conversion(from, expected, actual)
-    if expected == actual
-      print '.'
-    else
-      print 'F'
-      failures << "Expected: #{from.inspect} => #{expected.inspect} got #{actual.inspect}"
-    end
+    message = "Expected: #{from.inspect} => #{expected.inspect} got #{actual.inspect}"
+    assert_equal(expected, actual, message)
   end
 
   # @param [String] roman
@@ -73,6 +93,61 @@ module RomanNumeralTests
     assert_to_decimal('MCMXXCIII', 1983)
     assert_to_decimal('MCMLXXXIII', 1983)
     assert_to_decimal('MCMXXCIIV', 1983)
+
+    # Arithmetic operations
+    result = RomanNumeral.new(20) + RomanNumeral.new(1983)
+    assert_kind_of(RomanNumeral, result)
+    assert_equal(2003, result)
+
+    result =  RomanNumeral.new(1983) + RomanNumeral.new(20)
+    assert_kind_of(RomanNumeral, result)
+    assert_equal(2003, result.to_i)
+
+    result = RomanNumeral.new(1983) - RomanNumeral.new(31)
+    assert_kind_of(RomanNumeral, result)
+    assert_equal(1952, result.to_i)
+
+    result = RomanNumeral.new(486) * RomanNumeral.new(2)
+    assert_kind_of(RomanNumeral, result)
+    assert_equal(972, result.to_i)
+
+    result = RomanNumeral.new(486) / RomanNumeral.new(2)
+    assert_kind_of(RomanNumeral, result)
+    assert_equal(243, result.to_i)
+
+    numeral = RomanNumeral.new(486)
+    assert_equal(-1, numeral <=> RomanNumeral.new(500))
+    assert_equal(0, numeral <=> RomanNumeral.new(486))
+    assert_equal(1, numeral <=> RomanNumeral.new(200))
+
+    # Interoperability with Integer
+    result = 20 + RomanNumeral.new(1983)
+    assert_kind_of(Integer, result)
+    assert_equal(2003, result)
+
+    result =  RomanNumeral.new(1983) + 20
+    assert_kind_of(RomanNumeral, result)
+    assert_equal(2003, result.to_i)
+
+    result = RomanNumeral.new(1983) - 31
+    assert_kind_of(RomanNumeral, result)
+    assert_equal(1952, result.to_i)
+
+    result = RomanNumeral.new(486) * 2
+    assert_kind_of(RomanNumeral, result)
+    assert_equal(972, result.to_i)
+
+    result = RomanNumeral.new(486) / 2
+    assert_kind_of(RomanNumeral, result)
+    assert_equal(243, result.to_i)
+
+    numeral = RomanNumeral.new(486)
+    assert_equal(-1, numeral <=> 500)
+    assert_equal(0, numeral <=> 486)
+    assert_equal(1, numeral <=> 200)
+    assert_equal(-1, 500 <=> numeral)
+    assert_equal(0, 486 <=> numeral)
+    assert_equal(1, 200 <=> numeral)
 
     report_summary
   end

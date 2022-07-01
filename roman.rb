@@ -8,7 +8,7 @@
 # ruby roman.rb 1983
 # => MCMLXXXIII
 
-class RomanNumeral
+class RomanNumeral < Numeric
 
   attr_reader :decimal
   attr_reader :roman
@@ -27,9 +27,65 @@ class RomanNumeral
     end
   end
 
+  # @param [RomanNumeral, Integer] other
+  # @return [RomanNumeral]
+  def +(other)
+    op(:+, other)
+  end
+
+  # @param [RomanNumeral, Integer] other
+  # @return [RomanNumeral]
+  def -(other)
+    op(:-, other)
+  end
+
+  # @param [RomanNumeral, Integer] other
+  # @return [RomanNumeral]
+  def *(other)
+    op(:*, other)
+  end
+
+  # @param [RomanNumeral, Integer] other
+  # @return [RomanNumeral]
+  def /(other)
+    op(:/, other)
+  end
+
+  # @param [RomanNumeral, Integer] other
+  # @return [Integer]
+  def <=>(other)
+    case other
+    when self.class
+      to_i <=> other.to_i
+    when Integer
+      to_i <=> other
+    else
+      nil
+    end
+  end
+
   # @return [Integer]
   def to_i
     @decimal
+  end
+  alias to_int to_i
+
+  # @param [Numeric] other
+  # @return [Array(Numeric, RomanNumeral)]
+  def coerce(other)
+    # > Inheriting classes should also implement arithmetic operator
+    # > methods (+, -, * and /) and the <=> operator (see Comparable).
+    # https://ruby-doc.org/core-2.7.2/Numeric.html
+    case other
+    when Integer
+      # Note: The docs indicate that this should be [self.class.new(other), self],
+      # but that would mean Integer + RomanNumeral returns RomanNumeral.
+      # This seems wrong (?). Seems that Integer + RomanNumeral should return Integer.
+      # And RomanNumeral + Integer should return RomanNumeral.
+      [to_i, other]
+    else
+      raise TypeError, "unable to coerce to #{other.class}"
+    end
   end
 
   # @return [String]
@@ -38,6 +94,20 @@ class RomanNumeral
   end
 
   private
+
+  # @param [Symbol] operator
+  # @param [Integer] other
+  # @return [RomanNumeral]
+  def op(operator, other)
+    case other
+    when self.class
+      self.class.new(to_i.public_send(operator, other.to_i))
+    when Integer
+      self.class.new(to_i.public_send(operator, other))
+    else
+      raise TypeError, "unable to coerce #{other.class} to #{self.class}"
+    end
+  end
 
   ROMAN_TOKENS = {
     'M' => 1000,
