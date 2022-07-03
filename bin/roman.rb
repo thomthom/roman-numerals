@@ -10,7 +10,9 @@
 # ruby roman.rb 1983
 # => MCMLXXXIII
 
-require_relative 'lib/roman'
+$LOAD_PATH << File.expand_path('../lib', __dir__)
+
+require 'roman'
 
 if $PROGRAM_NAME == File.basename(__FILE__)
   input = ARGV[0]
