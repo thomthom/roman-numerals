@@ -15,7 +15,6 @@ AllCops:
   TargetRubyVersion: 2.7
 
 Metrics/ClassLength:
-  Max: 200
   Exclude:
   - tests/**/*
 
