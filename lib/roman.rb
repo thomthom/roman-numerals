@@ -60,9 +60,8 @@ class RomanNumeral < Numeric
       @decimal = input
       @roman = nil # Lazy-generated. (See #roman)
     when String
-      adjusted = input.upcase
-      @decimal = parse_roman(adjusted)
-      @roman = adjusted.freeze
+      @decimal = parse_roman(input)
+      @roman = input.freeze
     else
       raise TypeError, "expected Integer or String, got #{input.class}"
     end
