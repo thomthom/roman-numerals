@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require 'roman/lexer'
+require 'roman/parser'
+
 # A numeric class for Roman numerals.
 #
 # @example From a decimal integer
@@ -150,95 +153,14 @@ class RomanNumeral < Numeric
     end
   end
 
-  MEGA_MODIFIER = '_'
-  MODIFIABLE_TOKENS = 'MDCLXVI'
-
-  COMBINING_OVERLINE = "\u0305"
-
-  ROMAN_TOKENS = {
-    'M̅' => 1_000_000,
-    'D̅' => 500_000,
-    'C̅' => 100_000,
-    'L̅' => 50_000,
-    'X̅' => 10_000,
-    'V̅' => 5_000,
-    'I̅' => 1_000,
-    'M' => 1_000,
-    'D' => 500,
-    'C' => 100,
-    'L' => 50,
-    'X' => 10,
-    'V' => 5,
-    'I' => 1,
-  }.freeze
-
-  private_constant :ROMAN_TOKENS
-
-  # @param [String] input
-  # @return [Array<String>]
-  def parse_roman_tokens(input)
-    raise ArgumentError, 'invalid numeral: empty string' if input.empty?
-
-    tokens = []
-    mega = false
-    input.each_char.with_index { |token, i|
-      # Account for ASCII modifier to the numerals.
-      if mega && !MODIFIABLE_TOKENS.include?(token)
-        raise ArgumentError, "unexpected token after MEGA_MODIFIER: #{token}"
-      end
-
-      if token == MEGA_MODIFIER
-        mega = true
-        next
-      end
-
-      # Account for possible Combining Overline diacritics.
-      # https://en.wikipedia.org/wiki/Combining_character
-      next if token == COMBINING_OVERLINE
-
-      # Look ahead to see if there's an overline, indicating multiplication by 1000.
-      if input[i + 1] == COMBINING_OVERLINE
-        token = input[i, 2]
-        # Can't combine ASCII notation and Unicode tokens.
-        raise ArgumentError, "unexpected token after MEGA_MODIFIER: #{token}" if mega
-      end
-
-      # Convert the ASCII notation to Unicode notation.
-      token = "#{token}#{COMBINING_OVERLINE}" if mega
-      raise ArgumentError, "invalid numeral: #{token}" unless ROMAN_TOKENS.include?(token)
-
-      # Reset the MEGA state now that we have the full token.
-      mega = false
-
-      tokens << token
-    }
-    tokens
-  end
-
   # @param [String] input
   # @return [Integer]
   def parse_roman(input)
-    sum = 0
-    previous_value = 0
-    buffer_sum = 0
-    parse_roman_tokens(input).each { |token|
-      # Read the characters in chunks. Each chunk consists of the same token.
-      # Add up the sum for the chunk and compare against the previous token
-      # chunk whether to add or subtract to the total sum.
-      value = ROMAN_TOKENS[token]
-      if value == previous_value
-        buffer_sum += value
-      else
-        if value > previous_value && previous_value > 0
-          sum -= buffer_sum
-        else
-          sum += buffer_sum
-        end
-        buffer_sum = value
-      end
-      previous_value = value
-    }
-    sum + buffer_sum
+    lexer = Lexer.new
+    tokens = lexer.process(input)
+
+    parser = Parser.new
+    parser.process(tokens)
   end
 
   # @!parse public
