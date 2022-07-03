@@ -5,6 +5,7 @@ require 'roman/tokens'
 class RomanNumeral < Numeric
 
   # @private
+  # Parses a sequence of Roman numerals into decimal representations.
   class Parser
 
     # @param [Array<String>] tokens

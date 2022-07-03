@@ -3,6 +3,7 @@
 class RomanNumeral < Numeric
 
   # @private
+  # Generates Roman numerals from decimal input.
   class Generator
 
     # @param [Integer] input
@@ -38,6 +39,8 @@ class RomanNumeral < Numeric
     #
     NumeralSet = Struct.new(:next, :half, :this, :down)
 
+    # Maps each decimal position to the set of Roman numerals needed to
+    # represent the decimal digit.
     NUMERAL_SETS = {
       7 => NumeralSet.new(nil, nil, 'M̅'),
       6 => NumeralSet.new('M̅', 'D̅', 'C̅'),

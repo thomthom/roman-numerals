@@ -5,6 +5,7 @@ require 'roman/tokens'
 class RomanNumeral < Numeric
 
   # @private
+  # Generates sequence of Roman numerals from the given input string.
   class Lexer
 
     # Prefix `_` before a numeral to multiply it by `1000`.
