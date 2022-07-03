@@ -1,14 +1,12 @@
 # frozen_string_literal: true
 
-require 'roman/tokens'
-
 class RomanNumeral < Numeric
 
   # @private
   # Parses a sequence of Roman numerals into decimal representations.
   class Parser
 
-    # @param [Array<String>] tokens
+    # @param [Array<Token>] tokens
     # @return [Integer]
     def process(tokens)
       sum = 0
@@ -18,7 +16,7 @@ class RomanNumeral < Numeric
         # Read the characters in chunks. Each chunk consists of the same token.
         # Add up the sum for the chunk and compare against the previous token
         # chunk whether to add or subtract to the total sum.
-        value = ROMAN_TOKENS[token]
+        value = token.value
         if value == previous_value
           buffer_sum += value
         else
