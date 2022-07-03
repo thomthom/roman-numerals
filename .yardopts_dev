@@ -1,5 +1,5 @@
 --title "Roman Numerals in Ruby"
---no-private
+--private
 --list-undoc
 --markup markdown
 --markup-provider commonmarker

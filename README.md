@@ -11,5 +11,23 @@ bundle exec rake test TEST=tests/roman_test.rb
 ```
 
 ```sh
-bundle exec rake test TEST=tests/roman_test.rb TESTOPTS="--name=/test_process_instance_method_in_module_with_kwargs.*/ -v"
+bundle exec rake test TEST=tests/roman_test.rb TESTOPTS="--name=/test_large_values.*/ -v"
+```
+
+## Documentation
+
+### Public
+
+```
+bundle exec rake doc
+```
+
+```
+bundle exec yard doc
+```
+
+### Internal
+
+```
+bundle exec yard doc --yardopts=.yardopts_dev
 ```
