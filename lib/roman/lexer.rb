@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'roman/tokens'
+
 class RomanNumeral < Numeric
 
   # @private
@@ -8,31 +10,16 @@ class RomanNumeral < Numeric
     # Prefix `_` before a numeral to multiply it by `1000`.
     # This is an ASCII alternative to the unicode notation.
     MEGA_MODIFIER_PREFIX = '_'
+    private_constant :MEGA_MODIFIER_PREFIX
 
     # A Unicode postfix modifier multiplying the preceding
     # numeral by `1000`.
     MEGA_MODIFIER_POSTFIX = "\u0305"
+    private_constant :MEGA_MODIFIER_POSTFIX
 
     # List of numerals that can be modified by the thousand modifiers.
     MODIFIABLE_TOKENS = 'MDCLXVI'
-
-    # A map of the Roman numerals and their decimal values.
-    ROMAN_TOKENS = {
-      'M̅' => 1_000_000,
-      'D̅' => 500_000,
-      'C̅' => 100_000,
-      'L̅' => 50_000,
-      'X̅' => 10_000,
-      'V̅' => 5_000,
-      'I̅' => 1_000,
-      'M' => 1_000,
-      'D' => 500,
-      'C' => 100,
-      'L' => 50,
-      'X' => 10,
-      'V' => 5,
-      'I' => 1,
-    }.freeze
+    private_constant :MODIFIABLE_TOKENS
 
     # @param [String] input
     # @return [Array<String>]

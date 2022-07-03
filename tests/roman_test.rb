@@ -93,7 +93,13 @@ class RomanNumeralTest < Minitest::Test
   end
 
   def test_zero
-    assert_to_roman(0, 'N')
+    assert_roundtrip('N', 0)
+  end
+
+  def test_zero_incorrectly_used
+    # For now the `N` is ignored, falling in line with the flexible parsing
+    # allowing for alternate combinations.
+    assert_to_decimal('MCMLXXXNIII', 1983)
   end
 
   def test_negative_values
