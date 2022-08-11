@@ -150,7 +150,7 @@ class RomanNumeral < Numeric
         this = set.down || set.this
         "#{this}#{set.next}"
       else
-        # 0 -> ''
+        # 0 => ''
         ''
       end
     end
