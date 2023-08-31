@@ -9,7 +9,7 @@ class RomanNumeral < Numeric
     # @param [Integer] input
     # @raise [RangeError] when the input is outside the range of what can be converted to roman numerals.
     def self.check_range(input)
-      raise RangeError, "integer out of range: #{input}" unless (0...4_000_000).include?(input)
+      raise RangeError, "integer out of range: #{input}" unless (0...10_000_000).include?(input)
     end
 
     # @private
@@ -111,6 +111,11 @@ class RomanNumeral < Numeric
 
       set = NUMERAL_SETS[position]
       raise "invalid numeral set: #{position}" if set.nil?
+
+      # Edge case for the upper bound range supported decimal.
+      if position == NUMERAL_SETS.size
+        return set.this * digit
+      end
 
       # https://en.wikipedia.org/wiki/Roman_numerals#Standard_form
       #

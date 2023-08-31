@@ -108,9 +108,21 @@ class RomanNumeralTest < Minitest::Test
     end
   end
 
-  def test_too_large_value
+  def test_max_positive_value_before_edge_case
+    assert_roundtrip('M̅M̅M̅C̅M̅X̅C̅I̅X̅CMXCIX', 3_999_999)
+  end
+
+  def test_high_value_toward_edge_case
+    assert_roundtrip('M̅M̅M̅M̅', 4_000_000)
+  end
+
+  def test_max_positive_value
+    assert_roundtrip('M̅M̅M̅M̅M̅M̅M̅M̅M̅C̅M̅X̅C̅I̅X̅CMXCIX', 9_999_999)
+  end
+
+  def test_out_of_range_positive
     assert_raises(RangeError) do
-      RomanNumeral.new(4_000_000)
+      RomanNumeral.new(10_000_000)
     end
   end
 
