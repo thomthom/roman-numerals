@@ -93,10 +93,10 @@ class RomanNumeral < Numeric
 
       output = +''
       string = input.to_s
-      string.each_char.with_index { |token, i|
+      string.each_char.with_index { |digit_character, i|
         # Position from the right. (Base 1)
         position = string.size - i
-        output << digit_to_roman(position, token.to_i)
+        output << digit_to_roman(position, digit_character.to_i)
       }
       output
     end
