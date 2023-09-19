@@ -9,6 +9,7 @@ class RomanNumeralExtTest < Minitest::Test
 
   def test_string_roman
     numeral = 'MCMLXXXIII'.roman
+
     assert_kind_of(RomanNumeral, numeral)
     assert_equal(1983, numeral)
   end
@@ -27,6 +28,7 @@ class RomanNumeralExtTest < Minitest::Test
 
   def test_integer_roman
     numeral = 1983.roman
+
     assert_kind_of(RomanNumeral, numeral)
     assert_equal(1983, numeral)
   end

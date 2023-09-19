@@ -12,6 +12,7 @@ class RomanNumeralTest < Minitest::Test
   # @param [Object] actual
   def assert_conversion(from, expected, actual)
     message = "Expected: #{from.inspect} => #{expected.inspect} got #{actual.inspect}"
+
     assert_equal(expected, actual, message)
   end
 
@@ -19,6 +20,7 @@ class RomanNumeralTest < Minitest::Test
   # @param [Integer] decimal
   def assert_to_decimal(roman, decimal)
     numeral = RomanNumeral.new(roman)
+
     assert_conversion(roman, decimal, numeral.decimal)
   end
 
@@ -26,6 +28,7 @@ class RomanNumeralTest < Minitest::Test
   # @param [String] roman
   def assert_to_roman(decimal, roman)
     numeral = RomanNumeral.new(decimal)
+
     assert_conversion(decimal, roman, numeral.roman)
   end
 
@@ -39,6 +42,7 @@ class RomanNumeralTest < Minitest::Test
 
   def test_class
     numeral = RomanNumeral.new(101)
+
     assert_kind_of(Numeric, numeral)
     assert_kind_of(Comparable, numeral)
   end
@@ -129,30 +133,35 @@ class RomanNumeralTest < Minitest::Test
   # Arithmetic operations
   def test_arithmetic_operation_add
     result = RomanNumeral.new(20) + RomanNumeral.new(1983)
+
     assert_kind_of(RomanNumeral, result)
     assert_equal(2003, result)
   end
 
   def test_arithmetic_operation_subtract
     result = RomanNumeral.new(1983) - RomanNumeral.new(31)
+
     assert_kind_of(RomanNumeral, result)
     assert_equal(1952, result)
   end
 
   def test_arithmetic_operation_multiply
     result = RomanNumeral.new(486) * RomanNumeral.new(2)
+
     assert_kind_of(RomanNumeral, result)
     assert_equal(972, result)
   end
 
   def test_arithmetic_operation_divide
     result = RomanNumeral.new(486) / RomanNumeral.new(2)
+
     assert_kind_of(RomanNumeral, result)
     assert_equal(243, result)
   end
 
   def test_arithmetic_operation_compare
     numeral = RomanNumeral.new(486)
+
     assert_equal(-1, numeral <=> RomanNumeral.new(500))
     assert_equal(0, numeral <=> RomanNumeral.new(486))
     assert_equal(1, numeral <=> RomanNumeral.new(200))
@@ -161,54 +170,63 @@ class RomanNumeralTest < Minitest::Test
   # Interoperability with Integer
   def test_arithmetic_operation_add_to_integer
     result = 20 + RomanNumeral.new(1983)
+
     assert_kind_of(RomanNumeral, result)
     assert_equal(2003, result)
   end
 
   def test_arithmetic_operation_add_integer
     result = RomanNumeral.new(1983) + 20
+
     assert_kind_of(RomanNumeral, result)
     assert_equal(2003, result)
   end
 
   def test_arithmetic_operation_subtract_from_integer
     result = 1983 - RomanNumeral.new(31)
+
     assert_kind_of(RomanNumeral, result)
     assert_equal(1952, result)
   end
 
   def test_arithmetic_operation_subtract_integer
     result = RomanNumeral.new(1983) - 31
+
     assert_kind_of(RomanNumeral, result)
     assert_equal(1952, result)
   end
 
   def test_arithmetic_operation_multiply_integer
     result = 2 * RomanNumeral.new(486)
+
     assert_kind_of(RomanNumeral, result)
     assert_equal(972, result)
   end
 
   def test_arithmetic_operation_multiply_by_integer
     result = RomanNumeral.new(486) * 2
+
     assert_kind_of(RomanNumeral, result)
     assert_equal(972, result)
   end
 
   def test_arithmetic_operation_divide_integer
     result = 486 / RomanNumeral.new(2)
+
     assert_kind_of(RomanNumeral, result)
     assert_equal(243, result)
   end
 
   def test_arithmetic_operation_divide_by_integer
     result = RomanNumeral.new(486) / 2
+
     assert_kind_of(RomanNumeral, result)
     assert_equal(243, result)
   end
 
   def test_comparable_with_right_hand_integer
     numeral = RomanNumeral.new(486)
+
     assert_equal(-1, numeral <=> 500)
     assert_equal(0, numeral <=> 486)
     assert_equal(1, numeral <=> 200)
@@ -216,6 +234,7 @@ class RomanNumeralTest < Minitest::Test
 
   def test_comparable_with_left_hand_integer
     numeral = RomanNumeral.new(486)
+
     assert_equal(1, 500 <=> numeral)
     assert_equal(0, 486 <=> numeral)
     assert_equal(-1, 200 <=> numeral)
@@ -223,18 +242,21 @@ class RomanNumeralTest < Minitest::Test
 
   def test_to_s
     result = RomanNumeral.new(1983).to_s
+
     assert_kind_of(String, result)
     assert_equal('MCMLXXXIII', result)
   end
 
   def test_to_i
     result = RomanNumeral.new(1983).to_i
+
     assert_kind_of(Integer, result)
     assert_equal(1983, result)
   end
 
   def test_to_int
     result = RomanNumeral.new(1983).to_int
+
     assert_kind_of(Integer, result)
     assert_equal(1983, result)
   end
