@@ -1,6 +1,5 @@
 --title "Roman Numerals in Ruby"
 --private
---list-undoc
 --markup markdown
 --markup-provider commonmarker
 lib/**/*.rb
