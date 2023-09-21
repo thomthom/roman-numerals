@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'roman/generator'
-require 'roman/lexer'
-require 'roman/parser'
+require_relative 'roman/generator'
+require_relative 'roman/lexer'
+require_relative 'roman/parser'
 
 # A numeric class for Roman numerals.
 #

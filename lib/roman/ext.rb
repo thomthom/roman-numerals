@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'roman'
+require_relative '../roman'
 
 # By requiring `roman/ext` the {String} class is extended with helpers for
 # syntactic sugar for creating {RomanNumeral} instances.

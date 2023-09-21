@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'roman/token'
+require_relative 'token'
 
 class RomanNumeral < Numeric
 
